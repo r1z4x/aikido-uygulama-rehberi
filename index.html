@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Aikido teknikleri ve terimleri hakkında kapsamlı bir rehber">
+    <title>Aikido Uygulama Rehberi</title>
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#2c3e50',
+                        secondary: '#3498db',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-50 font-sans">
+    <div x-data="{ 
+        searchTerm: '',
+        activeModal: null,
+        basicTerms: [],
+        spiritualTerms: [],
+        technicalTerms: [],
+        activeSection: 'basic-terms',
+        async init() {
+            try {
+                const response = await fetch('data.json');
+                const data = await response.json();
+                this.basicTerms = data.basicTerms;
+                this.spiritualTerms = data.spiritualTerms;
+                this.technicalTerms = data.technicalTerms;
+            } catch (error) {
+                console.error('Error loading data:', error);
+            }
+        },
+        scrollToSection(sectionId) {
+            const element = document.getElementById(sectionId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                this.activeSection = sectionId;
+            }
+        }
+    }" class="flex flex-col lg:flex-row min-h-screen">
+        <!-- Mobile Navbar -->
+        <nav class="lg:hidden w-full bg-primary text-white py-4 shadow-md sticky top-0 z-50">
+            <div class="container mx-auto px-4 flex justify-center items-center">
+                <span class="text-2xl font-bold tracking-wide select-none">Aikido Uygulama Rehberi</span>
+            </div>
+        </nav>
+
+        <!-- Mobile Navigation -->
+        <div class="lg:hidden bg-primary text-white p-4 pt-2 sticky top-[64px] z-40">
+            <div class="relative mb-4">
+                <input 
+                    type="text" 
+                    x-model="searchTerm"
+                    placeholder="Teknik veya terim ara..." 
+                    class="w-full px-4 py-2 bg-white/10 rounded-lg text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-secondary"
+                >
+                <i class="fas fa-search absolute right-3 top-1/2 transform -translate-y-1/2 text-white/50"></i>
+            </div>
+            <div class="flex space-x-2 overflow-x-auto pb-2">
+                <button 
+                    @click="scrollToSection('basic-terms')"
+                    :class="{'bg-secondary': activeSection === 'basic-terms', 'bg-white/10': activeSection !== 'basic-terms'}"
+                    class="px-4 py-2 rounded-lg text-sm whitespace-nowrap transition-colors"
+                >
+                    Temel Terimler
+                </button>
+                <button 
+                    @click="scrollToSection('spiritual-terms')"
+                    :class="{'bg-secondary': activeSection === 'spiritual-terms', 'bg-white/10': activeSection !== 'spiritual-terms'}"
+                    class="px-4 py-2 rounded-lg text-sm whitespace-nowrap transition-colors"
+                >
+                    Ahlaki ve Ruhsal Terimler
+                </button>
+                <button 
+                    @click="scrollToSection('technical-terms')"
+                    :class="{'bg-secondary': activeSection === 'technical-terms', 'bg-white/10': activeSection !== 'technical-terms'}"
+                    class="px-4 py-2 rounded-lg text-sm whitespace-nowrap transition-colors"
+                >
+                    Teknik Terimler
+                </button>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <aside class="hidden lg:block w-64 bg-primary text-white fixed h-full overflow-y-auto shadow-lg">
+            <div class="p-4">
+                <h1 class="text-2xl font-bold mb-6 text-center tracking-wide select-none">Aikido Uygulama Rehberi</h1>
+                <div class="relative mb-6">
+                    <input 
+                        type="text" 
+                        x-model="searchTerm"
+                        placeholder="Teknik veya terim ara..." 
+                        class="w-full px-4 py-2 bg-white/10 rounded-lg text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-secondary"
+                    >
+                    <i class="fas fa-search absolute right-3 top-1/2 transform -translate-y-1/2 text-white/50"></i>
+                </div>
+                
+                <h2 class="text-xl font-medium mb-4">Aikido Terimleri</h2>
+                <nav>
+                    <ul class="space-y-2">
+                        <template x-for="(section, index) in ['basic-terms', 'spiritual-terms', 'technical-terms']" :key="index">
+                            <li>
+                                <a 
+                                    :href="'#' + section"
+                                    @click.prevent="scrollToSection(section)"
+                                    class="block px-2 py-1 text-white/80 hover:text-white hover:bg-white/10 rounded transition-colors"
+                                    x-text="section === 'basic-terms' ? 'Temel Terimler' : 
+                                           section === 'spiritual-terms' ? 'Ahlaki ve Ruhsal Terimler' : 
+                                           'Teknik Terimler'"
+                                ></a>
+                            </li>
+                        </template>
+                    </ul>
+                </nav>
+                <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-white/10">
+                    <p class="text-white/80 text-sm text-center">Hazırlayan: Rizacan Tufan (5. KYU)</p>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 lg:ml-64 p-4 lg:p-8">
+            <!-- Basic Terms -->
+            <section id="basic-terms" class="mb-12" x-show="basicTerms.filter(term => !searchTerm || term.japanese.toLowerCase().includes(searchTerm.toLowerCase()) || term.meaning.toLowerCase().includes(searchTerm.toLowerCase())).length > 0">
+                <h2 class="text-2xl lg:text-3xl font-medium text-primary mb-6 pb-2 border-b-2 border-secondary inline-block font-jp">Temel Terimler</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+                    <template x-for="(term, index) in basicTerms" :key="term.id">
+                        <div 
+                            x-show="!searchTerm || term.japanese.toLowerCase().includes(searchTerm.toLowerCase()) || term.meaning.toLowerCase().includes(searchTerm.toLowerCase())"
+                            class="bg-white rounded-lg shadow-md p-4 lg:p-6 relative cursor-pointer hover:shadow-lg transition-shadow border-l-4 border-secondary"
+                            @click="activeModal = term"
+                        >
+                            <div class="absolute -left-2 top-1/2 -translate-y-1/2 w-4 h-4 bg-secondary text-white text-xs flex items-center justify-center font-medium" x-text="index + 1"></div>
+                            <div class="flex items-center gap-2 mb-2">
+                                <h3 class="text-base lg:text-lg font-medium text-primary font-jp" x-text="term.japanese"></h3>
+                                <p class="text-gray-600 text-sm"><span class="text-secondary font-medium">Okunuşu:</span> <span x-text="term.turkish"></span></p>
+                            </div>
+                            <p class="text-gray-600 text-sm lg:text-base" x-text="term.meaning"></p>
+                        </div>
+                    </template>
+                </div>
+            </section>
+
+            <!-- Spiritual Terms -->
+            <section id="spiritual-terms" class="mb-12" x-show="spiritualTerms.filter(term => !searchTerm || term.japanese.toLowerCase().includes(searchTerm.toLowerCase()) || term.meaning.toLowerCase().includes(searchTerm.toLowerCase())).length > 0">
+                <h2 class="text-2xl lg:text-3xl font-medium text-primary mb-6 pb-2 border-b-2 border-secondary inline-block font-jp">Ahlaki ve Ruhsal Terimler</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+                    <template x-for="(term, index) in spiritualTerms" :key="term.id">
+                        <div 
+                            x-show="!searchTerm || term.japanese.toLowerCase().includes(searchTerm.toLowerCase()) || term.meaning.toLowerCase().includes(searchTerm.toLowerCase())"
+                            class="bg-white rounded-lg shadow-md p-4 lg:p-6 relative cursor-pointer hover:shadow-lg transition-shadow border-l-4 border-secondary"
+                            @click="activeModal = term"
+                        >
+                            <div class="absolute -left-2 top-1/2 -translate-y-1/2 w-4 h-4 bg-secondary text-white text-xs flex items-center justify-center font-medium" x-text="index + 1"></div>
+                            <div class="flex items-center gap-2 mb-2">
+                                <h3 class="text-base lg:text-lg font-medium text-primary font-jp" x-text="term.japanese"></h3>
+                                <p class="text-gray-600 text-sm"><span class="text-secondary font-medium">Okunuşu:</span> <span x-text="term.turkish"></span></p>
+                            </div>
+                            <p class="text-gray-600 text-sm lg:text-base" x-text="term.meaning"></p>
+                        </div>
+                    </template>
+                </div>
+            </section>
+
+            <!-- Technical Terms -->
+            <section id="technical-terms" class="mb-12" x-show="technicalTerms.filter(term => !searchTerm || term.japanese.toLowerCase().includes(searchTerm.toLowerCase()) || term.meaning.toLowerCase().includes(searchTerm.toLowerCase())).length > 0">
+                <h2 class="text-2xl lg:text-3xl font-medium text-primary mb-6 pb-2 border-b-2 border-secondary inline-block font-jp">Teknik Terimler</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
+                    <template x-for="(term, index) in technicalTerms" :key="term.id">
+                        <div 
+                            x-show="!searchTerm || term.japanese.toLowerCase().includes(searchTerm.toLowerCase()) || term.meaning.toLowerCase().includes(searchTerm.toLowerCase())"
+                            class="bg-white rounded-lg shadow-md p-4 lg:p-6 relative cursor-pointer hover:shadow-lg transition-shadow border-l-4 border-secondary"
+                            @click="activeModal = term"
+                        >
+                            <div class="absolute -left-2 top-1/2 -translate-y-1/2 w-4 h-4 bg-secondary text-white text-xs flex items-center justify-center font-medium" x-text="index + 1"></div>
+                            <div class="flex items-center gap-2 mb-2">
+                                <h3 class="text-base lg:text-lg font-medium text-primary font-jp" x-text="term.japanese"></h3>
+                                <p class="text-gray-600 text-sm"><span class="text-secondary font-medium">Okunuşu:</span> <span x-text="term.turkish"></span></p>
+                            </div>
+                            <p class="text-gray-600 text-sm lg:text-base" x-text="term.meaning"></p>
+                        </div>
+                    </template>
+                </div>
+            </section>
+        </main>
+
+        <!-- Modal -->
+        <div 
+            x-show="activeModal" 
+            x-transition:enter="transition ease-out duration-300"
+            x-transition:enter-start="opacity-0"
+            x-transition:enter-end="opacity-100"
+            x-transition:leave="transition ease-in duration-200"
+            x-transition:leave-start="opacity-100"
+            x-transition:leave-end="opacity-0"
+            class="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4"
+            @click.self="activeModal = null"
+        >
+            <div 
+                x-show="activeModal"
+                x-transition:enter="transition ease-out duration-300"
+                x-transition:enter-start="opacity-0 transform scale-95"
+                x-transition:enter-end="opacity-100 transform scale-100"
+                x-transition:leave="transition ease-in duration-200"
+                x-transition:leave-start="opacity-100 transform scale-100"
+                x-transition:leave-end="opacity-0 transform scale-95"
+                class="bg-white rounded-lg shadow-xl max-w-lg w-full mx-4"
+            >
+                <div class="p-4 lg:p-6">
+                    <div class="flex justify-between items-start mb-4">
+                        <div class="flex items-center gap-3">
+                            <h3 class="text-xl lg:text-2xl font-medium text-primary font-jp" x-text="activeModal?.japanese"></h3>
+                            <p class="text-gray-600 text-base lg:text-lg"><span class="text-secondary font-medium">Okunuşu:</span> <span x-text="activeModal?.turkish"></span></p>
+                        </div>
+                        <button @click="activeModal = null" class="text-gray-500 hover:text-gray-700">
+                            <i class="fas fa-times text-xl"></i>
+                        </button>
+                    </div>
+                    <div class="space-y-4">
+                        <p class="text-gray-600 border-t pt-4" x-text="activeModal?.meaning"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
