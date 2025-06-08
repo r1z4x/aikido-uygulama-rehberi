@@ -35,7 +35,7 @@
         activeSection: 'basic-terms',
         async init() {
             try {
-                const response = await fetch('data.json');
+                const response = await fetch('/data.json');
                 const data = await response.json();
                 this.basicTerms = data.basicTerms;
                 this.spiritualTerms = data.spiritualTerms;
