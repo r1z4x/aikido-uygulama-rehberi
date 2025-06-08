@@ -26,6 +26,45 @@
     </script>
 </head>
 <body class="bg-gray-50 font-sans">
+    <!-- Embedded JSON data -->
+    <script type="application/json" id="terms-data">
+{
+  "basicTerms": [
+    { "id": "bt1", "japanese": "Aikido (合気道)", "turkish": "Aikido", "meaning": "Uyum yolu, uyumlu enerji sanatı" },
+    { "id": "bt2", "japanese": "Dojo (道場)", "turkish": "Dojo", "meaning": "Antrenman yapılan yer" },
+    { "id": "bt3", "japanese": "Keiko (稽古)", "turkish": "Keiko", "meaning": "Antrenman, pratik" },
+    { "id": "bt4", "japanese": "Sensei (先生)", "turkish": "Sensei", "meaning": "Öğretmen, hoca" },
+    { "id": "bt5", "japanese": "Uke (受け)", "turkish": "Uke", "meaning": "Saldırıyı yapan, alan kişi" },
+    { "id": "bt6", "japanese": "Tori / Nage (取り/投げ)", "turkish": "Tori / Nage", "meaning": "Tekniği uygulayan kişi" },
+    { "id": "bt7", "japanese": "Rei (礼)", "turkish": "Rei", "meaning": "Selam vermek" },
+    { "id": "bt8", "japanese": "Seiza (正座)", "turkish": "Seiza", "meaning": "Diz çökerek oturma" },
+    { "id": "bt9", "japanese": "Gi / Dogi (着/道着)", "turkish": "Gi / Dogi", "meaning": "Antrenman kıyafeti" },
+    { "id": "bt10", "japanese": "Hakama (袴)", "turkish": "Hakama", "meaning": "Üst düzey öğrencilerin giydiği geniş pantolon" }
+  ],
+  "spiritualTerms": [
+    { "id": "st1", "japanese": "Zanshin (残心)", "turkish": "Zanshin", "meaning": "Uyanık kalma, farkındalık" },
+    { "id": "st2", "japanese": "Kokyu (呼吸)", "turkish": "Kokyu", "meaning": "Nefes, içsel enerji" },
+    { "id": "st3", "japanese": "Ki (気)", "turkish": "Ki", "meaning": "Yaşam enerjisi" },
+    { "id": "st4", "japanese": "Mushin (無心)", "turkish": "Mushin", "meaning": "Boş zihin (tepkisiz ama hazır)" },
+    { "id": "st5", "japanese": "Maai (間合い)", "turkish": "Maai", "meaning": "Uygun mesafe (taktiğe göre pozisyon)" },
+    { "id": "st6", "japanese": "Kuzushi (崩し)", "turkish": "Kuzushi", "meaning": "Denge bozma" }
+  ],
+  "technicalTerms": [
+    { "id": "tt1", "japanese": "Ikkyo (一教)", "turkish": "Ikkyo", "meaning": "1. kontrol, kolun kontrolü" },
+    { "id": "tt2", "japanese": "Nikkyo (二教)", "turkish": "Nikkyo", "meaning": "2. kontrol, bilek burma" },
+    { "id": "tt3", "japanese": "Sankyo (三教)", "turkish": "Sankyo", "meaning": "3. kontrol, bilek bükme" },
+    { "id": "tt4", "japanese": "Yonkyo (四教)", "turkish": "Yonkyo", "meaning": "4. kontrol, sinir baskısı" },
+    { "id": "tt5", "japanese": "Gokyo (五教)", "turkish": "Gokyo", "meaning": "5. kontrol, nadir kullanılır" },
+    { "id": "tt6", "japanese": "Irimi (入身)", "turkish": "Irimi", "meaning": "Rakibin içine girme hareketi" },
+    { "id": "tt7", "japanese": "Tenkan (転換)", "turkish": "Tenkan", "meaning": "Dönerek yer değiştirme" },
+    { "id": "tt8", "japanese": "Shiho-nage (四方投げ)", "turkish": "Shiho-nage", "meaning": "Dört yöne atış (çapraz kontrol)" },
+    { "id": "tt9", "japanese": "Kote-gaeshi (小手返し)", "turkish": "Kote-gaeshi", "meaning": "Bilek çevirme, ters burma" },
+    { "id": "tt10", "japanese": "Kaiten-nage (回転投げ)", "turkish": "Kaiten-nage", "meaning": "Dönerek atış" },
+    { "id": "tt11", "japanese": "Ude-garami (腕緘)", "turkish": "Ude-garami", "meaning": "Kol kilidi" },
+    { "id": "tt12", "japanese": "Kokyu-nage (呼吸投げ)", "turkish": "Kokyu-nage", "meaning": "Nefes gücüyle atış (enerji aktarımı)" }
+  ]
+}
+    </script>
     <div x-data="{ 
         searchTerm: '',
         activeModal: null,
@@ -35,13 +74,13 @@
         activeSection: 'basic-terms',
         async init() {
             try {
-                const response = await fetch('/data.json');
-                const data = await response.json();
+                const json = document.getElementById('terms-data').textContent;
+                const data = JSON.parse(json);
                 this.basicTerms = data.basicTerms;
                 this.spiritualTerms = data.spiritualTerms;
                 this.technicalTerms = data.technicalTerms;
             } catch (error) {
-                console.error('Error loading data:', error);
+                console.error('Error loading embedded data:', error);
             }
         },
         scrollToSection(sectionId) {
